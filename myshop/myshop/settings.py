@@ -40,11 +40,16 @@ INSTALLED_APPS = [
     'cart',
     'shop',
     'orders',
+    'payment',
+    'coupons',
+    'rosetta',
+    'parler',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -122,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -133,3 +139,42 @@ EMAIL_HOST_USER = 'denant1993@gmail.com'
 EMAIL_HOST_PASSWORD = '1u1sb02839yD'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# Настройки Braintree
+BRAINTREE_MERCHANT_ID = 'ky2tyzvbdw5ztrfw'
+BRAINTREE_PUBLIC_KEY = 'dn69ytwp2fzydgbm'
+BRAINTREE_PRIVATE_KEY = 'e9552ac07abd71334f53cf7865785ea0'
+
+from braintree import Configuration, Environment
+
+Configuration.configure(
+    Environment.Sandbox,
+    BRAINTREE_MERCHANT_ID,
+    BRAINTREE_PUBLIC_KEY,
+    BRAINTREE_PRIVATE_KEY
+)
+
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('es', _('Spanish')),
+)
+
+LANGUAGE_CODE = 'en'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale/'),
+)
+
+POLAR_LANGUAGES = {
+    None: (
+        {'code': 'en'},
+        {'code': 'es'},
+    ),
+    'default': {
+        'fallback': 'en',
+        'hide_untranslated': False,
+    }
+
+}
